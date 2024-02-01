@@ -38,21 +38,55 @@
 
         $erreurs = array();
 
-        if(($_POST['prenom']) && !is_numeric($_POST['prenom'])) {
+        //erreur 1
+        if(($_POST['prenom']) && !type_alpha($_POST['prenom'])) {
             $erreurs[] = "le prenom est vide!<br>";
+        } else{
+            $prenom = $_POST['prenom'];
+            trim($prenom);
         }
-
-        if(($_POST['nom']) && !is_numeric($_POST['nom'])) {
+        //erreur 2
+        if(($_POST['nom']) && !type_alpha($_POST['nom'])) {
             $erreurs[] = "le nom est vide!<br>";
+        }else{
+            $nom = $_POST['nom'];
+            trim($nom);
         }
 
         if(($_POST['couriel']) && (str_contains(($_POST['couriel']), '@'))) {
             $erreurs[] = "le couriel est vide!<br>";
+        }else{
+            $courielle = $_POST['courielle'];
+            trim($courielle);
         }
-
-        if($_POST['mot_de_passe'] != $_POST['valider_mdp']){
+        //erreur 4
+        if($_POST['psw'] != $_POST['psw2']){
             $erreurs[] = "Les mot de passe ne sont pas egale!<br>";
+        } else{
+            $$mot_de_passe = $_POST['psw'];
+            trim($mot_de_passe);
         }
+        //erreur 5
+
+        $comp = $conn->prepare("SELECT courriel FROM tch056_labo_8 WHERE courriel LIKE :courielle");
+        $comp->bindParam(':courielle', $courielle_in);
+        $comp->execute();
+
+        if ($comp->rowCount() > 0) {
+        $erreurs[] = "Le courriel est déjà dans la base!<br>";
+    }
+
+
+
+    if(count($erreurs) == 0){
+        echo "Salut " .$_POST['nom']. " tu as " . $age. "ans!<br>";
+     }else {
+
+         foreach($erreur as $erreurs){
+         echo "<p style='color:red;>". $erreurs."</p><br>";
+         }
+     }
+
    // courriel = string replace _ code, emaile
         }
         
@@ -81,7 +115,7 @@
                 $query_insert->bindParam(':prenom', $prenom);
                 $query_insert->bindParam(':nom', $nom);
                 $query_insert->bindParam(':courriel', $courriel);
-                $query_insert->bindParam(':mot_de_passe', $mot_de_passe_hash);
+                $query_insert->bindParam(':mot_de_passe', $mot_de_passe);
                 $result_insert = $query_insert->execute();
         
                 if (!$result_insert) {
