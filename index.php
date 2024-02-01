@@ -6,7 +6,7 @@
         require('connexion.php');
 
             // Établir la connexion avec PDO
-            $conn = new PDO("mysql:host=localhost;dbname=utilisateurs", "admin", "admin");
+            $conn = new PDO("mysql:host=localhost:;dbname=utilisateurs", "admin", "motdepasse123");
                         
             //
             if ($conn == null) {
@@ -46,15 +46,9 @@
         if(($_POST['nom']) && !type_alpha($_POST['nom'])) {
             $erreurs[] = "le nom est vide!<br>";
         }
-<<<<<<< Updated upstream
 
         if(($_POST['couriel']) && (str_contains(($_POST['courielle']), '@'))) {
             $erreurs[] = "le couriel est vide!<br>";
-=======
-        //erreur 3
-        if(($_POST['courielle']) && (str_contains(($_POST['courielle']), '@'))) {
-            $erreurs[] = "le courielle est vide!<br>";
->>>>>>> Stashed changes
         }
         //erreur 4
         if($_POST['psw'] != $_POST['psw2']){
