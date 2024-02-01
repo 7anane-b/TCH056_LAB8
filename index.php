@@ -38,21 +38,42 @@
 
         $erreurs = array();
 
-        if(($_POST['prenom']) && !is_numeric($_POST['prenom'])) {
+        //erreur 1
+        if(($_POST['prenom']) && !type_alpha($_POST['prenom'])) {
             $erreurs[] = "le prenom est vide!<br>";
         }
-
-        if(($_POST['nom']) && !is_numeric($_POST['nom'])) {
+        //erreur 2
+        if(($_POST['nom']) && !type_alpha($_POST['nom'])) {
             $erreurs[] = "le nom est vide!<br>";
         }
+<<<<<<< Updated upstream
 
         if(($_POST['couriel']) && (str_contains(($_POST['courielle']), '@'))) {
             $erreurs[] = "le couriel est vide!<br>";
+=======
+        //erreur 3
+        if(($_POST['courielle']) && (str_contains(($_POST['courielle']), '@'))) {
+            $erreurs[] = "le courielle est vide!<br>";
+>>>>>>> Stashed changes
         }
-
-        if($_POST['mot_de_passe'] != $_POST['valider_mdp']){
+        //erreur 4
+        if($_POST['psw'] != $_POST['psw2']){
             $erreurs[] = "Les mot de passe ne sont pas egale!<br>";
         }
+        //erreur 5
+
+        $comp = $conn->prepare("SELECT courriel FROM tch056_labo_8 WHERE courriel LIKE :courielle");
+        $comp->bindParam(':courielle', $courielle_in);
+        $comp->execute();
+
+        if ($comp->rowCount() > 0) {
+        $erreurs[] = "Le courriel est déjà dans la base!<br>";
+    }
+
+
+
+        
+
    // courriel = string replace _ code, emaile
         }
         
