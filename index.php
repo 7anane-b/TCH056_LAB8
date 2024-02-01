@@ -1,5 +1,13 @@
 <?php
 
+        include 'en-tete.html';
+
+
+        ?>
+
+
+<?php
+
     echo "<div  style='background-color:lightpink; display:flex; 
     flex-direction: column; justify-content: space-between;
     padding: 20px; border-radius: 20px;'>";
@@ -26,6 +34,13 @@
         echo "</div>";
 
        echo  "</form>";
+
+
+        ?>
+
+        <?php
+
+        include 'pied.html';
 
 
         ?>
