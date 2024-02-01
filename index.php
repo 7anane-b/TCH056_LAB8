@@ -41,18 +41,30 @@
         //erreur 1
         if(($_POST['prenom']) && !type_alpha($_POST['prenom'])) {
             $erreurs[] = "le prenom est vide!<br>";
+        } else{
+            $prenom = $_POST['prenom'];
+            trim($prenom);
         }
         //erreur 2
         if(($_POST['nom']) && !type_alpha($_POST['nom'])) {
             $erreurs[] = "le nom est vide!<br>";
+        }else{
+            $nom = $_POST['nom'];
+            trim($nom);
         }
-
-        if(($_POST['couriel']) && (str_contains(($_POST['courielle']), '@'))) {
+        //erreur 3
+        if(($_POST['courielle']) && (str_contains(($_POST['courielle']), '@'))) {
             $erreurs[] = "le couriel est vide!<br>";
+        }else{
+            $courielle = $_POST['courielle'];
+            trim($courielle);
         }
         //erreur 4
         if($_POST['psw'] != $_POST['psw2']){
             $erreurs[] = "Les mot de passe ne sont pas egale!<br>";
+        } else{
+            $$mot_de_passe = $_POST['psw'];
+            trim($mot_de_passe);
         }
         //erreur 5
 
@@ -66,7 +78,14 @@
 
 
 
-        
+    if(count($erreurs) == 0){
+        echo "Salut " .$_POST['nom']. " tu as " . $age. "ans!<br>";
+     }else {
+
+         foreach($erreur as $erreurs){
+         echo "<p style='color:red;>". $erreurs."</p><br>";
+         }
+     }
 
    // courriel = string replace _ code, emaile
         }
