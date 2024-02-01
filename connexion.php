@@ -5,7 +5,7 @@ function connexionPDO($prenom, $nom, $couriel, $psw) {
     try {
 
            // Établir la connexion avec PDO
-           $conn = new PDO("mysql:host=$prenom;dbname=$nom", $courielle, $psw);
+           $conn = new PDO("mysql:host=$prenom;dbname=$nom", $couriel, $psw);
          
            // Activer le mode d'erreur
            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
