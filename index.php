@@ -6,7 +6,7 @@
         require('connexion.php');
 
             // Établir la connexion avec PDO
-            $conn = new PDO("mysql:host=localhost;dbname=utilisateurs", "admin", "admin");
+            $conn = new PDO("mysql:host=127.0.0.1;dbname=tch056_cours_8b","admin","motdepasse123");
                         
             //
             if ($conn == null) {
@@ -16,7 +16,7 @@
             }
 
             // Requête SQL
-            $requete = "SELECT * FROM utilisateurs";
+            $requete = "SELECT * FROM utilisateurs WHERE courriel";
 
             // Exécuter la requête
             $resultat = $conn->query($requete);
@@ -26,7 +26,7 @@
 
             // Afficher les résultats ligne par ligne
             while($ligne = $resultat->fetch(PDO::FETCH_ASSOC)) {
-                echo $ligne["identifiant"] . " " . $ligne["mot_de_passe"] . "<br>";
+                echo $ligne["prenom"] . $ligne["nom"] .$ligne["courriel"]. $ligne["mot_de_passe"] . "<br>";
             }
 
 
@@ -46,7 +46,7 @@
             $erreurs[] = "le nom est vide!<br>";
         }
 
-        if(($_POST['couriel']) && (str_contains(($_POST['courielle']), '@'))) {
+        if(($_POST['couriel']) && (str_contains(($_POST['couriel']), '@'))) {
             $erreurs[] = "le couriel est vide!<br>";
         }
 
@@ -59,29 +59,33 @@
 
 
         if(empty($erreurs)) {
-            $prenom = mysqli_real_escape_string($conn, $prenom);
-            $nom = mysqli_real_escape_string($conn, $nom);
-            $courriel = mysqli_real_escape_string($conn, $courriel);
-            $mot_de_passe = mysqli_real_escape_string($conn, $mot_de_passe);
-
+            $prenom = $conn->quote($prenom);
+            $nom = $conn->quote($nom);
+            $courriel = $conn->quote($courriel);
+            $mot_de_passe = $conn->quote($mot_de_passe);
 
             $query = "SELECT * FROM utilisateurs WHERE courriel = '$courriel'";
-            $result = mysqli_query($conn, $query);
+            $result = $conn->query($query);
             if (!$result) {
                 die("requete echouee: " . mysqli_error($conn));
             }
 
 
-            if (mysqli_num_rows($result) > 0) {
+            if ($result->rowCount() > 0) {
                 echo "Un compte est déjà associé à cet email.";
             } else {
                 $mot_de_passe_hash = password_hash($mot_de_passe, PASSWORD_DEFAULT);
         
-                $query_insert = "INSERT INTO utilisateurs (prenom, nom, courriel, mot_de_passe) VALUES ('$prenom', '$nom', '$courriel', '$mot_de_passe_hash')";
-                $result_insert = mysqli_query($conn, $query_insert);
+
+                $query_insert = $conn->prepare("INSERT INTO utilisateurs (prenom, nom, courriel, mot_de_passe) VALUES (:prenom, :nom, :courriel, :mot_de_passe)");
+                $query_insert->bindParam(':prenom', $prenom);
+                $query_insert->bindParam(':nom', $nom);
+                $query_insert->bindParam(':courriel', $courriel);
+                $query_insert->bindParam(':mot_de_passe', $mot_de_passe_hash);
+                $result_insert = $query_insert->execute();
         
                 if (!$result_insert) {
-                    die("requete d'insertion echouee: " . mysqli_error($conn));
+                    die("requete d'insertion echouee: " .$conn->errorInfo()[2]);
                 }
             }
         
