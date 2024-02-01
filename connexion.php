@@ -1,6 +1,6 @@
 <?php
 
-function connexionPDO($prenom, $nom, $courielle, $psw) {
+function connexionPDO($prenom, $nom, $couriel, $psw) {
      
     try {
 

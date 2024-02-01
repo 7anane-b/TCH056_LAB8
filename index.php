@@ -39,25 +39,25 @@
         $erreurs = array();
 
         //erreur 1
-        if(($_POST['prenom']) && !type_alpha($_POST['prenom'])) {
+        if(($_POST['prenom']) && !ctype_alpha($_POST['prenom'])) {
             $erreurs[] = "le prenom est vide!<br>";
         } else{
             $prenom = $_POST['prenom'];
             trim($prenom);
         }
         //erreur 2
-        if(($_POST['nom']) && !type_alpha($_POST['nom'])) {
+        if(($_POST['nom']) && !ctype_alpha($_POST['nom'])) {
             $erreurs[] = "le nom est vide!<br>";
         }else{
             $nom = $_POST['nom'];
             trim($nom);
         }
 
-        if(($_POST['couriel']) && (str_contains(($_POST['couriel']), '@'))) {
+        if(($_POST['courriel']) && (str_contains(($_POST['courriel']), '@'))) {
             $erreurs[] = "le couriel est vide!<br>";
         }else{
-            $courielle = $_POST['courielle'];
-            trim($courielle);
+            $courielle = $_POST['courriel'];
+            trim($couriel);
         }
         //erreur 4
         if($_POST['psw'] != $_POST['psw2']){
@@ -68,8 +68,8 @@
         }
         //erreur 5
 
-        $comp = $conn->prepare("SELECT courriel FROM tch056_labo_8 WHERE courriel LIKE :courielle");
-        $comp->bindParam(':courielle', $courielle_in);
+        $comp = $conn->prepare("SELECT courriel FROM tch056_labo_8 WHERE courriel LIKE :courriel");
+        $comp->bindParam(':courriel', $courriel_in);
         $comp->execute();
 
         if ($comp->rowCount() > 0) {
@@ -96,26 +96,26 @@
             $prenom = $conn->quote($prenom);
             $nom = $conn->quote($nom);
             $courriel = $conn->quote($courriel);
-            $mot_de_passe = $conn->quote($mot_de_passe);
+            $psw = $conn->quote($psw);
 
             $query = "SELECT * FROM utilisateurs WHERE courriel = '$courriel'";
             $result = $conn->query($query);
             if (!$result) {
-                die("requete echouee: " . mysqli_error($conn));
+                die("requete echouee: " . $conn->errorInfo());
             }
 
 
             if ($result->rowCount() > 0) {
                 echo "Un compte est déjà associé à cet email.";
             } else {
-                $mot_de_passe_hash = password_hash($mot_de_passe, PASSWORD_DEFAULT);
+                $hash = password_hash($psw, PASSWORD_DEFAULT);
         
 
                 $query_insert = $conn->prepare("INSERT INTO utilisateurs (prenom, nom, courriel, mot_de_passe) VALUES (:prenom, :nom, :courriel, :mot_de_passe)");
                 $query_insert->bindParam(':prenom', $prenom);
                 $query_insert->bindParam(':nom', $nom);
                 $query_insert->bindParam(':courriel', $courriel);
-                $query_insert->bindParam(':mot_de_passe', $mot_de_passe);
+                $query_insert->bindParam(':mot_de_passe', $psw);
                 $result_insert = $query_insert->execute();
         
                 if (!$result_insert) {
