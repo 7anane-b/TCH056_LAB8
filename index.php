@@ -78,13 +78,12 @@
 
 
 
-    if(count($erreurs) == 0){
-        echo "Salut " .$_POST['nom']. " tu as " . $age. "ans!<br>";
-     }else {
-
+    if(count($erreurs) != 0){  
          foreach($erreur as $erreurs){
          echo "<p style='color:red;>". $erreurs."</p><br>";
          }
+         exit();
+         include 'pied.html';
      }
 
    // courriel = string replace _ code, emaile
