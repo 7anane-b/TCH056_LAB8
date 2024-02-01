@@ -5,10 +5,6 @@
         //require rather then include because the file is mandetory to run the 
         require('connexion.php');
 
-            // Établir la connexion avec PDO
-            $conn = new PDO("mysql:host=127.0.0.1;dbname=tch056_cours_8b","admin","motdepasse123");
-                        
-            //
             if ($conn == null) {
                 die("Connexion échouée avec PDO : " . $conn->connect_error);
             } else {
@@ -16,7 +12,8 @@
             }
 
             // Requête SQL
-            $requete = "SELECT * FROM utilisateurs WHERE courriel";
+            $requete = "SELECT * FROM utilisateurs WHERE courriel = :courielle";
+
 
             // Exécuter la requête
             $resultat = $conn->query($requete);
@@ -42,29 +39,25 @@
         if(($_POST['prenom']) && !ctype_alpha($_POST['prenom'])) {
             $erreurs[] = "le prenom est vide!<br>";
         } else{
-            $prenom = $_POST['prenom'];
-            trim($prenom);
+            $prenom = trim($_POST['prenom']);
         }
         //erreur 2
         if(($_POST['nom']) && !ctype_alpha($_POST['nom'])) {
             $erreurs[] = "le nom est vide!<br>";
         }else{
-            $nom = $_POST['nom'];
-            trim($nom);
+            $nom = trim($_POST['nom']);
         }
 
         if(($_POST['courriel']) && (str_contains(($_POST['courriel']), '@'))) {
             $erreurs[] = "le couriel est vide!<br>";
         }else{
-            $courielle = $_POST['courriel'];
-            trim($couriel);
+            $courriel = trim($_POST['courriel']);
         }
         //erreur 4
         if($_POST['psw'] != $_POST['psw2']){
             $erreurs[] = "Les mot de passe ne sont pas egale!<br>";
         } else{
-            $$mot_de_passe = $_POST['psw'];
-            trim($mot_de_passe);
+            $mot_de_passe = trim($_POST['psw']);
         }
         //erreur 5
 
@@ -78,15 +71,15 @@
 
 
 
-    if(count($erreurs) != 0){  
-         foreach($erreur as $erreurs){
+    if(count($erreurs) != 0){ 
+
+        foreach($erreurs as $erreur){
          echo "<p style='color:red;>". $erreurs."</p><br>";
          }
          exit();
          include 'pied.html';
      }
 
-   // courriel = string replace _ code, emaile
         }
         
 
@@ -161,7 +154,7 @@
             <input type='text' id='nom' name='nom' required>
 
             <label for='couriel'>Courriel:</label>
-            <input type='couriel' id='couriel' name='couriel' required>
+            <input type='email' id='couriel' name='couriel' required>
 
             <label for='psw'>Mot de Passe :</label>
             <input type='password' id='psw' name='psw' required>
