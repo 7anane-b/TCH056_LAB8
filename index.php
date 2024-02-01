@@ -2,11 +2,58 @@
 
         include 'en-tete.html';
 
+        //require rather then include because the file is mandetory to run the 
+        require('connexion.php');
+
+            // Établir la connexion avec PDO
+            $conn = new PDO("mysql:host=localhost;dbname=tch056_cours_8b", "admin", "admin");
+                        
+            //
+            if ($conn == null) {
+                die("Connexion échouée avec PDO : " . $conn->connect_error);
+            } else {
+                echo "Connexion réussie avec PDO!<br>";
+            }
+
+            // Requête SQL
+            $requete = "SELECT * FROM utilisateurs";
+
+            // Exécuter la requête
+            $resultat = $conn->query($requete);
+
+            // Afficher le nombre de résultats
+            echo "Nombre de résultats: " . $resultat->rowCount() . "<br>";
+
+            // Afficher les résultats ligne par ligne
+            while($ligne = $resultat->fetch(PDO::FETCH_ASSOC)) {
+                echo $ligne["identifiant"] . " " . $ligne["mot_de_passe"] . "<br>";
+            }
+
+
+
 
         if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST'){
 
-            //require rather then include because the file is mandetory to run the 
-        require('connexion.php');
+
+
+        $erreurs = array();
+
+        if(($_POST['prenom']) && !is_numeric($_POST['prenom'])) {
+            $erreurs[] = "le prenom est vide!<br>";
+        }
+
+        if(($_POST['nom']) && !is_numeric($_POST['nom'])) {
+            $erreurs[] = "le nom est vide!<br>";
+        }
+
+        if(($_POST['courielle']) && (str_contains(($_POST['courielle']), '@'))) {
+            $erreurs[] = "le courielle est vide!<br>";
+        }
+
+        if($_POST['mot_de_passe'] != $_POST['valider_mdp']){
+            $erreurs[] = "Les mot de passe ne sont pas egale!<br>";
+        }
+   // courriel = string replace _ code, emaile
         }
         
         ?>
