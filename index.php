@@ -6,7 +6,7 @@
         require('connexion.php');
 
             // Établir la connexion avec PDO
-            $conn = new PDO("mysql:host=localhost;dbname=tch056_cours_8b", "admin", "admin");
+            $conn = new PDO("mysql:host=localhost;dbname=utilisateurs", "admin", "admin");
                         
             //
             if ($conn == null) {
@@ -46,8 +46,8 @@
             $erreurs[] = "le nom est vide!<br>";
         }
 
-        if(($_POST['courielle']) && (str_contains(($_POST['courielle']), '@'))) {
-            $erreurs[] = "le courielle est vide!<br>";
+        if(($_POST['couriel']) && (str_contains(($_POST['courielle']), '@'))) {
+            $erreurs[] = "le couriel est vide!<br>";
         }
 
         if($_POST['mot_de_passe'] != $_POST['valider_mdp']){
@@ -56,6 +56,37 @@
    // courriel = string replace _ code, emaile
         }
         
+
+
+        if(empty($erreurs)) {
+            $prenom = mysqli_real_escape_string($conn, $prenom);
+            $nom = mysqli_real_escape_string($conn, $nom);
+            $courriel = mysqli_real_escape_string($conn, $courriel);
+            $mot_de_passe = mysqli_real_escape_string($conn, $mot_de_passe);
+
+
+            $query = "SELECT * FROM utilisateurs WHERE courriel = '$courriel'";
+            $result = mysqli_query($conn, $query);
+            if (!$result) {
+                die("requete echouee: " . mysqli_error($conn));
+            }
+
+
+            if (mysqli_num_rows($result) > 0) {
+                echo "Un compte est déjà associé à cet email.";
+            } else {
+                $mot_de_passe_hash = password_hash($mot_de_passe, PASSWORD_DEFAULT);
+        
+                $query_insert = "INSERT INTO utilisateurs (prenom, nom, courriel, mot_de_passe) VALUES ('$prenom', '$nom', '$courriel', '$mot_de_passe_hash')";
+                $result_insert = mysqli_query($conn, $query_insert);
+        
+                if (!$result_insert) {
+                    die("requete d'insertion echouee: " . mysqli_error($conn));
+                }
+            }
+        
+
+        }
         ?>
 
 
